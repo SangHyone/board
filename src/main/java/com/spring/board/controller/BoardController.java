@@ -171,7 +171,7 @@ public class BoardController {
 		List<BoardVo> list = boardList.getBoardList();
 		
 		int resultCnt = 0;
-		
+		System.out.println(list);
 		for(BoardVo vo : list) {
 			if(vo.getBoardTitle().contains("csh99")) {
 				vo.setBoardTitle(vo.getBoardTitle().replace("csh99", ","));
@@ -182,7 +182,7 @@ public class BoardController {
 			boardService.boardInsert(vo);
 			resultCnt++;
 		}
-		
+		result.put("success", (resultCnt>=list.size()) ? "Y" : "N" );
 		String callbackMsg = commonUtil.getJsonCallBackString(" ", result);
 
 		System.out.println("callbackMsg::" + callbackMsg);

@@ -71,7 +71,7 @@
 		var param = {
 				"boardTitle" : boardTitle,
 				"boardComment" : boardComment,
-				"boardNum" : boardNum
+				"boardNum" : boardNum,
 		}
 		$j.ajax({
 		    url : "/board/boardUpdateAction.do",
@@ -132,7 +132,7 @@
 					</tr>
 					<tr>
 						<td align="center">Writer</td>
-						<td></td>
+						<td>${board.creator }</td>
 					</tr>
 				</table>
 			</td>

@@ -53,4 +53,24 @@
     	FROM
     		USER_INFO
     </select>
+    
+    <select id="userLogin" parameterType="com.spring.board.vo.UserVo" resultMap="userVo">
+    	SELECT
+    		*
+    	FROM
+    		USER_INFO
+    	WHERE
+    		USER_ID = #{userId} 
+    	AND
+    		USER_PW = #{userPw}
+    </select>
+    
+    <select id="selectUserById" parameterType="String" resultMap="userVo">
+    	SELECT
+    		*
+    	FROM
+    		USER_INFO
+    	WHERE
+    		USER_ID = #{userId}
+    </select>
 </mapper>

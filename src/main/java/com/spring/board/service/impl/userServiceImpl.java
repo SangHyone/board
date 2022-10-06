@@ -25,6 +25,18 @@ public class userServiceImpl implements userService{
 		// TODO Auto-generated method stub
 		return userDao.userList();
 	}
+
+	@Override
+	public UserVo userLogin(UserVo userVo) throws Exception {
+		// TODO Auto-generated method stub
+		return userDao.userLogin(userVo);
+	}
+
+	@Override
+	public UserVo selectUserById(String	userId) throws Exception {
+		// TODO Auto-generated method stub
+		return userDao.selectUserById(userId);
+	}
 	
 	
 }

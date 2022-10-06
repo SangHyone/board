@@ -12,6 +12,11 @@ public class BoardList {
 	public void setBoardList(List<BoardVo> boardList) {
 		this.boardList = boardList;
 	}
+
+	@Override
+	public String toString() {
+		return "BoardList [boardList=" + boardList + "]";
+	}
 	
 	
 }

@@ -27,4 +27,16 @@ public class UserDaoImpl implements UserDao{
 		return sqlSession.selectList("user.userList");
 	}
 
+	@Override
+	public UserVo userLogin(UserVo userVo) throws Exception {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("user.userLogin", userVo);
+	}
+
+	@Override
+	public UserVo selectUserById(String	userId) throws Exception {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("user.selectUserById", userId);
+	}
+
 }

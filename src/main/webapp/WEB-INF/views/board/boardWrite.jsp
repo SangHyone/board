@@ -27,7 +27,6 @@
 			$j.ajax({
 				url : "/board/boardWriteAction.do",
 				dataType : "json",
-	            contentType: 'application/json; charset=utf-8',
 				type : "POST",
 				data : param,
 				success : function(data, textStatus, jqXHR) {
@@ -58,14 +57,11 @@
 		$j("textarea[name=boardComment]").each(function(index, item){
 			$j(item).attr("name","boardList["+index+"].boardComment");
     	});
+		$j("input[name=creator]").each(function(index, item){
+			$j(item).attr("name","boardList["+index+"].creator");
+    	});
 	}
 	
-	[board,board,board]
-	board = {
-			type: 1,
-			title :2,
-			comment :3
-	}
 	function addRow() {
 		var innerHtml = "";
 		innerHtml += '<tr>';
@@ -83,6 +79,7 @@
 		innerHtml += '<td height="300" align="center">Comment</td>';
 		innerHtml += '<td valign="top"><textarea name="boardComment" rows="20" cols="55">${board.boardComment}</textarea></td>';
 		innerHtml += '</tr>';
+		innerHtml += '<tr><td><input type="text" name="creator" value="${user.userId}" style="display:none;"></td></tr>';
 		$j('#write > tbody:first').append(innerHtml);
 	}
 	
@@ -133,7 +130,7 @@
 						</tbody>
 						<tr>
 							<td align="center">Writer</td>
-							<td></td>
+							<td width="400"><input type="text" name="creator" value="${user.userId}" readonly="readonly"></td>
 						</tr>
 					</table>
 				</td>

@@ -49,7 +49,8 @@
 						$j("#totalCnt").empty();
 						var boardList = data['boardList'];
 						var pageNo = data['pageNo'];
-						$j("#totalCnt").append("<td align='right'>total : "+data['totalCnt']+"</td>");
+//						$j("#totalCnt").append("<c:if test='${user}!=null'><td align='left'>${user.userId}</td></c:if><td align='right'>total : "+data['totalCnt']+"</td>");
+						$j("#totalCnt").append("<c:choose><c:when test='${user}!=null' ><td align='left'>${user.userId}</td></c:when></c:choose><td align='right'>total : "+data['totalCnt']+"</td>");
 						for(vo of boardList){
 							$j("#result").append(function(){
 								var board = "<tr>";
@@ -68,18 +69,33 @@
 			});
 		});
 	});
-
+	
 </script>
 <body>
 <table  align="center">
 	<tr>
-		<td align="left"><a href="/user/login.do">login</a></td>
-		<td align="left"><a href="/user/join.do">join</a></td>
+		<c:choose>
+			<c:when test="${empty user}">
+				<td align="left"><a href="/user/login.do">login</a></td>
+				<td align="left"><a href="/user/join.do">join</a></td>
+			</c:when>
+		</c:choose>
+		
 	</tr>
 	<tr id="totalCnt">
-		<td align="right">
-			total : ${totalCnt}
-		</td>
+		<c:choose>
+			<c:when test="${empty user}" >
+				<td align="right">
+					total : ${totalCnt}
+				</td>
+			</c:when>
+			<c:when test="${not empty user}">
+				<td align="left">${user.userId}</td>
+				<td align="right">
+					total : ${totalCnt}
+				</td>
+			</c:when>
+		</c:choose>
 	</tr>
 	<tr>
 		<td>
@@ -114,9 +130,20 @@
 		</td>
 	</tr>
 	<tr>
-		<td align="right">
-			<a href ="/board/boardWrite.do">글쓰기</a>
-		</td>
+		<c:choose>
+			<c:when test="${empty user}">
+				<td align="right">
+					<a href ="/board/boardWrite.do">글쓰기</a>
+				</td>
+			</c:when>
+			<c:when test="${not empty user}">
+				<td align="right">
+					<a href ="/board/boardWrite.do">글쓰기</a>
+					<a href ="/user/logout.do">로그아웃</a>
+				</td>
+			</c:when>
+		</c:choose>
+		
 	</tr>
 	<tr>
 		<td align="left">
@@ -127,6 +154,7 @@
 			<input type="submit" id="submit" value="submit" />
 		</td>
 	</tr>
-</table>	
+</table>
+<a href="/excel.do"></a>
 </body>
 </html>
