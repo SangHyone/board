@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.spring.board.HomeController;
 import com.spring.board.service.boardService;
 import com.spring.board.service.codeService;
-import com.spring.board.vo.BoardList;
 import com.spring.board.vo.BoardVo;
 import com.spring.board.vo.CodeVo;
 import com.spring.board.vo.PageVo;
@@ -33,7 +32,7 @@ public class BoardController {
 
 	@Autowired
 	boardService boardService;
-	
+
 	@Autowired
 	codeService codeService;
 
@@ -45,7 +44,7 @@ public class BoardController {
 		List<BoardVo> boardList = new ArrayList<BoardVo>();
 		List<CodeVo> codeList = new ArrayList<CodeVo>();
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		
+
 		int page = 1;
 		int totalCnt = 0;
 
@@ -70,21 +69,20 @@ public class BoardController {
 
 		return "board/boardList";
 	}
-	
+
 	@RequestMapping(value = "/board/sortBoardList.do", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String,Object> sortBoardList(Locale locale, PageVo pageVo,
 			@RequestParam(value="checkedList[]") List<String> checkedList,
 			Model model) throws Exception {
-		
+
 		List<BoardVo> boardList = new ArrayList<BoardVo>();
 		List<CodeVo> codeList = new ArrayList<CodeVo>();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		HashMap<String, Object> result = new HashMap<String, Object>();
-		CommonUtil commonUtil = new CommonUtil();
-		
+
 		codeList = codeService.selectMenuList();
-		
+
 		for(CodeVo cv : codeList) {
 			for(String value : checkedList) {
 				if(value.equals(cv.getCodeName())) {
@@ -92,21 +90,21 @@ public class BoardController {
 				}
 			}
 		}
-		
+
 		checkedList.removeAll(Collections.singletonList(null));
 		System.out.println(checkedList);
 		int page = 1;
 		int totalCnt = 0;
-		
+
 		if (pageVo.getPageNo() == 0) {
 			pageVo.setPageNo(page);
 		}
 		map.put("pageVo", pageVo);
 		map.put("checkedList", checkedList);
-		
+
 		boardList = boardService.SelectBoardList(map);
 		totalCnt = boardList.size();
-		
+
 		for(CodeVo cv : codeList) {
 			for(BoardVo bv : boardList) {
 				if(bv.getBoardType().equals(cv.getCodeId())) {
@@ -114,21 +112,21 @@ public class BoardController {
 				}
 			}
 		}
-		
+
 		model.addAttribute("boardList", boardList);
 		model.addAttribute("codeList", codeList);
 		model.addAttribute("totalCnt", totalCnt);
 		model.addAttribute("pageNo", page);
-		
+
 		result.put("success", (boardList!=null) ? "Y" : "N");
 		result.put("boardList", boardList);
 		result.put("codeList", codeList);
 		result.put("totalCnt", totalCnt);
 		result.put("pageNo", page);
-		String callbackMsg = commonUtil.getJsonCallBackString(" ", result);
+		String callbackMsg = CommonUtil.getJsonCallBackString(" ", result);
 
 		System.out.println("callbackMsg::" + callbackMsg);
-		
+
 		return result;
 	}
 
@@ -138,16 +136,16 @@ public class BoardController {
 
 		BoardVo boardVo = new BoardVo();
 		List<CodeVo> codeList = codeService.selectMenuList();
-		
+
 		String str = "";
-		for(CodeVo vo : codeList) { 
+		for(CodeVo vo : codeList) {
 			if(boardType.equals(vo.getCodeName())) {
 				str = vo.getCodeId();
-			} 
+			}
 		}
-		
+
 		boardVo = boardService.selectBoard(str, boardNum);
-		
+
 		model.addAttribute("boardType", boardType);
 		model.addAttribute("boardNum", boardNum);
 		model.addAttribute("board", boardVo);
@@ -164,26 +162,19 @@ public class BoardController {
 
 	@RequestMapping(value = "/board/boardWriteAction.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String boardWriteAction(Locale locale, BoardList boardList) throws Exception {
-
+	public String boardWriteAction(
+			Locale locale,
+			@RequestBody List<BoardVo> list) throws Exception {
 		HashMap<String, String> result = new HashMap<String, String>();
-		CommonUtil commonUtil = new CommonUtil();
-		List<BoardVo> list = boardList.getBoardList();
-		
+
 		int resultCnt = 0;
-		System.out.println(list);
 		for(BoardVo vo : list) {
-			if(vo.getBoardTitle().contains("csh99")) {
-				vo.setBoardTitle(vo.getBoardTitle().replace("csh99", ","));
-			}
-			if(vo.getBoardComment().contains("csh99")) {
-				vo.setBoardComment(vo.getBoardComment().replace("csh99", ","));
-			}
 			boardService.boardInsert(vo);
 			resultCnt++;
 		}
+
 		result.put("success", (resultCnt>=list.size()) ? "Y" : "N" );
-		String callbackMsg = commonUtil.getJsonCallBackString(" ", result);
+		String callbackMsg = CommonUtil.getJsonCallBackString(" ", result);
 
 		System.out.println("callbackMsg::" + callbackMsg);
 
@@ -195,12 +186,11 @@ public class BoardController {
 	public String boardUpdateAction(Locale locale, BoardVo boardVo) throws Exception {
 
 		HashMap<String, String> result = new HashMap<String, String>();
-		CommonUtil commonUtil = new CommonUtil();
 
 		int resultCnt = boardService.boardUpdate(boardVo);
 
 		result.put("success", (resultCnt > 0) ? "Y" : "N");
-		String callbackMsg = commonUtil.getJsonCallBackString(" ", result);
+		String callbackMsg = CommonUtil.getJsonCallBackString(" ", result);
 
 		System.out.println("callbackMsg::" + callbackMsg);
 
@@ -212,11 +202,10 @@ public class BoardController {
 	public String boardViewChangeAction(Locale locale, BoardVo boardVo) throws Exception {
 
 		HashMap<String, Object> result = new HashMap<String, Object>();
-		CommonUtil commonUtil = new CommonUtil();
 
 		BoardVo dbVo = boardService.selectBoard(boardVo.getBoardType(), boardVo.getBoardNum());
 		result.put("board", dbVo);
-		String callbackMsg = commonUtil.getJsonCallBackString(" ", result);
+		String callbackMsg = CommonUtil.getJsonCallBackString(" ", result);
 
 		System.out.println("callbackMsg::" + callbackMsg);
 
@@ -228,12 +217,11 @@ public class BoardController {
 	public String boardDeleteAction(Locale locale, int boardNum) throws Exception {
 
 		HashMap<String, Object> result = new HashMap<String, Object>();
-		CommonUtil commonUtil = new CommonUtil();
 
 		int resultCnt = boardService.boardDelete(boardNum);
 
 		result.put("success", (resultCnt > 0) ? "Y" : "N");
-		String callbackMsg = commonUtil.getJsonCallBackString(" ", result);
+		String callbackMsg = CommonUtil.getJsonCallBackString(" ", result);
 
 		System.out.println("callbackMsg::" + callbackMsg);
 
